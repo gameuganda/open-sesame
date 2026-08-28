@@ -49,6 +49,20 @@ function MediaInput({
 }) {
   const [mode, setMode] = useState<"url" | "file">("url");
   const [pct, setPct] = useState<number | null>(null);
+  const [active, setActive] = useState<{ name: string; size: number } | null>(null);
+  const [offline, setOffline] = useState(false);
+
+  useEffect(() => {
+    const sync = () => setOffline(!navigator.onLine);
+    sync();
+    window.addEventListener("online", sync);
+    window.addEventListener("offline", sync);
+    return () => {
+      window.removeEventListener("online", sync);
+      window.removeEventListener("offline", sync);
+    };
+  }, []);
+
 
   return (
     <div className="min-w-0 overflow-hidden rounded-2xl bg-white/55 p-3">
