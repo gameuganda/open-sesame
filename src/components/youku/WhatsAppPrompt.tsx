@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { MessageCircle, Phone, X, Users, Megaphone } from "lucide-react";
+import { Phone, X, Users, Megaphone } from "lucide-react";
+import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon";
 
 const CHANNEL_URL = "https://whatsapp.com/channel/0029VbCdTbF6buMEQY5wzG3y";
 const SUPPORT_URL = "https://wa.me/256795592662";
