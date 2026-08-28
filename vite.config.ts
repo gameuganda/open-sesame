@@ -6,10 +6,34 @@
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
+// Build target: Cloudflare by default (Lovable hosting). When building on Vercel
+// (VERCEL=1 in their CI) emit a Vercel-compatible server bundle instead, otherwise
+// there is no SSR handler there and every request returns 500.
+const preset = process.env["NITRO_PRESET"] ?? (process.env["VERCEL"] ? "vercel" : undefined);
+
 export default defineConfig({
+  // Keep the browser-only media engines in their own chunks. Without this the
+  // bundler merges unenv polyfills into the dash.js chunk, which makes the SSR
+  // router import (and evaluate) dash.js on the server -> "window is not defined"
+  // and every page returns the generic error screen in production.
+  vite: {
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id: string) {
+            if (id.includes("node_modules/dashjs")) return "media-dashjs";
+            if (id.includes("node_modules/hls.js")) return "media-hlsjs";
+            if (id.includes("node_modules/artplayer")) return "media-artplayer";
+            return undefined;
+          },
+        },
+      },
+    },
+  },
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  ...(preset ? { nitro: { preset } } : {}),
 });

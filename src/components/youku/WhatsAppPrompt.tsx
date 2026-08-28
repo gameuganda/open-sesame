@@ -1,0 +1,117 @@
+import { useEffect, useState } from "react";
+import { MessageCircle, Phone, X, Users, Megaphone } from "lucide-react";
+
+const CHANNEL_URL = "https://whatsapp.com/channel/0029VbCdTbF6buMEQY5wzG3y";
+const SUPPORT_URL = "https://wa.me/256795592662";
+const DISMISSED_KEY = "luofilm:whatsapp-prompt-dismissed";
+const AUTO_EXIT_MS = 8000;
+
+export function WhatsAppPrompt() {
+  const [open, setOpen] = useState(false);
+  const [leaving, setLeaving] = useState(false);
+
+  useEffect(() => {
+    let dismissed = false;
+    try {
+      dismissed = localStorage.getItem(DISMISSED_KEY) === "1";
+    } catch {
+      /* storage unavailable */
+    }
+    if (!dismissed) setOpen(true);
+  }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    const t = setTimeout(() => {
+      setLeaving(true);
+      setTimeout(() => setOpen(false), 400);
+    }, AUTO_EXIT_MS);
+    return () => clearTimeout(t);
+  }, [open]);
+
+  const dismiss = () => {
+    setLeaving(true);
+    setTimeout(() => setOpen(false), 400);
+    try {
+      localStorage.setItem(DISMISSED_KEY, "1");
+    } catch {
+      /* storage unavailable */
+    }
+  };
+
+  if (!open) return null;
+
+  return (
+    <aside
+      role="dialog"
+      aria-label="Follow LUOFILM on WhatsApp"
+      className={`wa-prompt fixed inset-x-3 bottom-5 z-[65] mx-auto max-w-md transition-all duration-400 ${
+        leaving ? "translate-y-6 opacity-0" : "animate-enter"
+      }`}
+    >
+      <div className="relative overflow-hidden rounded-3xl border border-[#25D366]/40 bg-gradient-to-br from-[#0b3d2e] via-[#0f5132] to-[#075E54] p-5 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)]">
+        {/* glow accents */}
+        <div className="pointer-events-none absolute -top-16 -right-16 size-40 rounded-full bg-[#25D366]/30 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-16 -left-16 size-40 rounded-full bg-[#128C7E]/30 blur-3xl" />
+
+        <button
+          type="button"
+          onClick={dismiss}
+          aria-label="Dismiss WhatsApp prompt"
+          className="absolute top-3 right-3 grid size-8 place-items-center rounded-full bg-white/10 text-white/80 transition-colors hover:bg-white/20 hover:text-white"
+        >
+          <X className="size-4" />
+        </button>
+
+        <div className="relative flex flex-col items-center text-center">
+          <span className="grid size-14 place-items-center rounded-full bg-gradient-to-br from-[#25D366] to-[#128C7E] shadow-[0_10px_25px_-8px_rgba(37,211,102,0.8)] ring-4 ring-white/10">
+            <MessageCircle className="size-7 text-white" fill="currentColor" />
+          </span>
+
+          <h2 className="mt-3 text-xl font-extrabold tracking-tight text-white">
+            Don't miss new releases!
+          </h2>
+          <p className="mt-1 text-sm text-white/75">
+            Join LUOFILM on WhatsApp for instant movie & episode updates.
+          </p>
+
+          <div className="mt-4 flex w-full items-center justify-center gap-3">
+            <a
+              href={CHANNEL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={dismiss}
+              className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#25D366] to-[#1ebe5b] px-4 py-2.5 text-sm font-bold text-[#06301c] shadow-[0_10px_25px_-8px_rgba(37,211,102,0.9)] transition-transform hover:scale-[1.03] active:scale-95"
+            >
+              <Megaphone className="size-4" />
+              Follow Channel
+            </a>
+            <a
+              href={SUPPORT_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={dismiss}
+              className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2.5 text-sm font-bold text-white backdrop-blur transition-all hover:scale-[1.03] hover:bg-white/20 active:scale-95"
+            >
+              <Phone className="size-4" />
+              Call Support
+            </a>
+          </div>
+
+          <p className="mt-3 flex items-center gap-1.5 text-[11px] text-white/55">
+            <Users className="size-3" />
+            Loved by thousands of LUOFILM viewers
+          </p>
+        </div>
+
+        {/* 8s auto-exit progress bar */}
+        <div className="absolute inset-x-0 bottom-0 h-1 bg-white/10">
+          <div
+            className="h-full bg-[#25D366]"
+            style={{ animation: `wa-exit-bar ${AUTO_EXIT_MS}ms linear forwards` }}
+          />
+        </div>
+      </div>
+    </aside>
+  );
+}
