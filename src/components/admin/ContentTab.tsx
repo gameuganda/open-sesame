@@ -316,7 +316,8 @@ export function ContentTab({ userId }: { userId?: string }) {
       )}
 
       <Dialog open={!!form} onOpenChange={(v) => !v && setForm(null)}>
-        <DialogContent className="max-h-[88vh] w-[calc(100vw-1.5rem)] max-w-[640px] overflow-y-auto overflow-x-hidden border-0 bg-[linear-gradient(165deg,oklch(0.98_0.02_20),oklch(0.97_0.03_320)_55%,oklch(0.98_0.03_80))] p-4 text-[oklch(0.28_0.03_320)] sm:p-6">
+        {/* Fixed rectangle: the width never reacts to a long pasted link. */}
+        <DialogContent className="grid max-h-[88vh] w-[calc(100vw-1.5rem)] max-w-[calc(100vw-1.5rem)] grid-cols-1 overflow-y-auto overflow-x-hidden rounded-2xl border-0 bg-[linear-gradient(165deg,oklch(0.98_0.02_20),oklch(0.97_0.03_320)_55%,oklch(0.98_0.03_80))] p-4 text-[oklch(0.28_0.03_320)] sm:w-[640px] sm:max-w-[640px] sm:p-6">
           <DialogHeader>
             <DialogTitle className="text-[18px] font-bold">
               {form?.id ? "Update" : form?.kind === "series" ? "Add series" : "Upload movie"}
