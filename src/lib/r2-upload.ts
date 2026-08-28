@@ -5,9 +5,9 @@ export type UploadProgress = { loaded: number; total: number; percent: number };
 const PART_SIZE = 16 * 1024 * 1024;
 const CONCURRENCY = 6;
 const SINGLE_LIMIT = 16 * 1024 * 1024;
-const MAX_ATTEMPTS = 8;
+const MAX_ATTEMPTS = 60;
 
-async function signer<T>(path: string, body: unknown): Promise<T> {
+async function rawSigner<T>(path: string, body: unknown): Promise<T> {
   const res = await fetch(`${uploadBackend()}${path}`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${uploadToken()}` },
