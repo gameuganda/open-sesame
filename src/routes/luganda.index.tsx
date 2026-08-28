@@ -6,22 +6,39 @@ import { MobileNav } from "@/components/youku/MobileNav";
 import { LuoLibrary } from "@/components/luo/LuoLibrary";
 
 export const Route = createFileRoute("/luganda/")({
-  head: () => ({
-    meta: [
-      { title: "Luganda Movies & Series — LUOFILM.SITE" },
-      {
-        name: "description",
-        content: "Watch Luganda translated movies and series uploaded by the LUOFILM admin team.",
-      },
-      { property: "og:title", content: "Luganda Movies & Series — LUOFILM.SITE" },
-      {
-        property: "og:description",
-        content: "Watch Luganda translated movies and series uploaded by the LUOFILM admin team.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () => {
+    const title =
+      "LUOFILM.SITE Watch and Download Luganda Translated Movies by Your Favourite VJ — Movies for VJ Junior, VJ Ice P, VJ Jingo, VJ Mark and All Other Lugandan VJs";
+    const description =
+      "Watch and download Luganda translated movies and series from your favourite VJs — VJ Junior, VJ Ice P, VJ Jingo, VJ Mark and all other Lugandan VJs. Movies, series, animation, comedy, action and every genre, free in HD.";
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:type", content: "website" },
+        { property: "og:url", content: "/luganda" },
+        { property: "og:site_name", content: "LUOFILM.SITE" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: title },
+        { name: "twitter:description", content: description },
+      ],
+      links: [{ rel: "canonical", href: "/luganda" }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            name: title,
+            description,
+            inLanguage: "lg",
+          }),
+        },
+      ],
+    };
+  },
   component: LugandaPage,
 });
 
