@@ -4,6 +4,7 @@ import { Sidebar } from "@/components/youku/Sidebar";
 import { TopBar } from "@/components/youku/TopBar";
 import { MobileNav } from "@/components/youku/MobileNav";
 import { LuoLibrary } from "@/components/luo/LuoLibrary";
+import { DownloadTour } from "@/components/luo/DownloadTour";
 
 export const Route = createFileRoute("/luo/")({
   head: () => {
@@ -73,6 +74,7 @@ function LuoPage() {
         </main>
       </div>
       <MobileNav />
+      <DownloadTour />
     </div>
   );
 }

@@ -48,6 +48,7 @@ export function MobileNav() {
         </Link>
         <Link
           to="/luo"
+          data-tour="luo-tab"
           onTouchStart={warm("luo")}
           onMouseEnter={warm("luo")}
           className={`${shell} ${tone(pathname.startsWith("/luo"))}`}
