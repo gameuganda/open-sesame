@@ -126,8 +126,10 @@ export async function uploadToR2(
       const partNumber = index + 1;
       const blob = file.slice(index * PART_SIZE, Math.min((index + 1) * PART_SIZE, file.size));
 
-      for (let attempt = 1; ; attempt++) {
-        try {
+      // Each part re-signs and re-sends itself until it lands, so a dropped
+      // connection only rewinds that one 16 MB chunk — never the whole upload.
+      await withRetry(
+        async () => {
           const { urls } = await signer<{ urls: { partNumber: number; url: string }[] }>("/uploads/sign", {
             key,
             uploadId,
@@ -143,15 +145,12 @@ export async function uploadToR2(
           etags[index] = etag;
           loadedPerPart[index] = blob.size;
           report();
-          return;
-        } catch (err) {
+        },
+        () => {
           loadedPerPart[index] = 0;
           report();
-          if (attempt >= MAX_ATTEMPTS) throw err;
-          await waitForNetwork();
-          await new Promise((r) => setTimeout(r, Math.min(10000, 1000 * attempt)));
-        }
-      }
+        },
+      );
     }
   };
 
