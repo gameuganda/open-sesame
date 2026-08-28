@@ -23,18 +23,18 @@ export function MobileNav() {
   const items = [
     { to: "/" as const, label: "Home", icon: "home", active: pathname === "/" },
     {
-      to: "/category/$slug" as const,
-      params: { slug: "movies" },
-      label: "Movies",
-      icon: "movies",
-      active: pathname === "/category/movies",
+      to: "/luo" as const,
+      params: undefined,
+      label: "Luo",
+      icon: "live-tv",
+      active: pathname.startsWith("/luo"),
     },
     {
-      to: "/category/$slug" as const,
-      params: { slug: "drama" },
-      label: "Series",
+      to: "/luganda" as const,
+      params: undefined,
+      label: "Luganda",
       icon: "drama",
-      active: pathname === "/category/drama",
+      active: pathname.startsWith("/luganda"),
     },
     {
       to: "/category/$slug" as const,

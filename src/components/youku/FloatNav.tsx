@@ -5,6 +5,7 @@ import { AuthModal } from "@/components/auth/AuthModal";
 import { useIsAdmin } from "@/hooks/useAuth";
 import { useSubscription } from "@/hooks/useSubscription";
 import { db as supabase } from "@/lib/db";
+import markAsset from "@/assets/luofilm-mark.png";
 
 /** Floating glass pill nav: LUO · LUGANDA · SUBSCRIBE · LOGIN */
 export function FloatNav() {
@@ -25,13 +26,26 @@ export function FloatNav() {
     <>
       <div className="search-glow shrink-0 rounded-full p-[1.5px]">
       <div className="flex shrink-0 items-center gap-1 rounded-full bg-background/85 p-1 shadow-lg backdrop-blur-xl">
-        <Link to="/" className={pill(pathname === "/" || pathname.startsWith("/watch") || pathname.startsWith("/search"))}>
+        {/* Brand inside the float on mobile only (desktop sidebar shows it). */}
+        <Link to="/" className="flex shrink-0 items-center gap-1.5 pl-1.5 pr-2 lg:hidden">
+          <img src={markAsset} alt="LUOFILM logo" className="h-6 w-auto" />
+          <span className="whitespace-nowrap font-[Bebas_Neue,system-ui,sans-serif] text-[15px] leading-none tracking-wide">
+            <span className="bg-gradient-to-r from-[#00EAFF] to-[#5CFF00] bg-clip-text text-transparent">
+              LUOFILM
+            </span>
+            <span className="text-[#C822FF]">.SITE</span>
+          </span>
+        </Link>
+        <Link
+          to="/"
+          className={`${pill(pathname === "/" || pathname.startsWith("/watch") || pathname.startsWith("/search"))} hidden lg:grid`}
+        >
           Moviebox
         </Link>
-        <Link to="/luo" className={pill(pathname.startsWith("/luo"))}>
+        <Link to="/luo" className={`${pill(pathname.startsWith("/luo"))} hidden lg:grid`}>
           Luo
         </Link>
-        <Link to="/luganda" className={pill(pathname.startsWith("/luganda"))}>
+        <Link to="/luganda" className={`${pill(pathname.startsWith("/luganda"))} hidden lg:grid`}>
           Luganda
         </Link>
         <button
