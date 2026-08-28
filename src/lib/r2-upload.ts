@@ -103,7 +103,7 @@ export async function uploadToR2(
       filename: file.name,
       contentType: file.type || "application/octet-stream",
     });
-    await put(url, file, emit);
+    await withRetry(() => put(url, file, emit), () => emit(0));
     emit(file.size);
     return publicUrl;
   }
