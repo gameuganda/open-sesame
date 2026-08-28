@@ -96,6 +96,7 @@ export function FloatNav() {
           </button>
         )}
       </div>
+      </div>
 
       <AuthModal open={authOpen} onOpenChange={setAuthOpen} />
     </>
