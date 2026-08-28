@@ -1,24 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Icon3D } from "@/components/Icon3D";
-import markAsset from "@/assets/luofilm-mark.png";
 import { FloatNav } from "@/components/youku/FloatNav";
 import { searchTitles } from "@/lib/catalog.functions";
 import type { CatalogItem } from "@/lib/moviebox";
-
-function BrandMark() {
-  return (
-    <Link to="/" className="flex min-w-0 items-center gap-1.5">
-      <img src={markAsset} alt="LUOFILM logo" className="h-7 w-auto shrink-0" />
-      <span className="whitespace-nowrap font-[Bebas_Neue,system-ui,sans-serif] text-[18px] leading-none tracking-wide">
-        <span className="bg-gradient-to-r from-[#00EAFF] to-[#5CFF00] bg-clip-text text-transparent">
-          LUOFILM
-        </span>
-        <span className="text-[#C822FF]">.SITE</span>
-      </span>
-    </Link>
-  );
-}
 
 export function TopBar() {
   const navigate = useNavigate();
