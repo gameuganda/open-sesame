@@ -23,7 +23,8 @@ export function FloatNav() {
 
   return (
     <>
-      <div className="flex shrink-0 items-center gap-1 rounded-full bg-foreground/10 p-1 shadow-lg ring-1 ring-white/10 backdrop-blur-xl">
+      <div className="search-glow shrink-0 rounded-full p-[1.5px]">
+      <div className="flex shrink-0 items-center gap-1 rounded-full bg-background/85 p-1 shadow-lg backdrop-blur-xl">
         <Link to="/" className={pill(pathname === "/" || pathname.startsWith("/watch") || pathname.startsWith("/search"))}>
           Moviebox
         </Link>
@@ -94,6 +95,7 @@ export function FloatNav() {
             </span>
           </button>
         )}
+      </div>
       </div>
 
       <AuthModal open={authOpen} onOpenChange={setAuthOpen} />
