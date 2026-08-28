@@ -58,12 +58,32 @@ export function FloatNav({ onSearch }: { onSearch?: () => void } = {}) {
         >
           Moviebox
         </Link>
-        <Link to="/luo" className={`${pill(pathname.startsWith("/luo"))} hidden lg:grid`}>
+        <Link
+          to="/luo"
+          onMouseEnter={warm("luo")}
+          onTouchStart={warm("luo")}
+          className={`${pill(pathname.startsWith("/luo"))} hidden lg:grid`}
+        >
           Luo
         </Link>
-        <Link to="/luganda" className={`${pill(pathname.startsWith("/luganda"))} hidden lg:grid`}>
+        <Link
+          to="/luganda"
+          onMouseEnter={warm("luganda")}
+          onTouchStart={warm("luganda")}
+          className={`${pill(pathname.startsWith("/luganda"))} hidden lg:grid`}
+        >
           Luganda
         </Link>
+        {onSearch && (
+          <button
+            type="button"
+            aria-label="Search"
+            onClick={onSearch}
+            className="grid size-8 shrink-0 place-items-center rounded-full bg-foreground/12 text-foreground transition hover:bg-foreground/25 lg:hidden"
+          >
+            <Icon3D name="search" className="size-4" />
+          </button>
+        )}
         <button
           type="button"
           onClick={openSubscribe}
