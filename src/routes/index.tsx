@@ -136,7 +136,8 @@ function HomePage() {
                   key={slide.backdrop}
                   src={slide.backdrop}
                   alt={slide.title}
-                  className="size-full animate-in fade-in object-cover duration-700"
+                  // Anchor near the top so faces stay in frame on wide desktop crops.
+                  className="size-full animate-in fade-in object-cover object-[center_18%] duration-700 lg:object-[center_12%]"
                 />
               ) : (
                 <div className="size-full bg-card" />
