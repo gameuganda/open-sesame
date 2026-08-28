@@ -2,9 +2,10 @@ import { uploadBackend, uploadToken } from "./r2-config";
 
 export type UploadProgress = { loaded: number; total: number; percent: number };
 
-const PART_SIZE = 16 * 1024 * 1024;
-const CONCURRENCY = 6;
-const SINGLE_LIMIT = 16 * 1024 * 1024;
+const PART_SIZE = 8 * 1024 * 1024;
+const CONCURRENCY = 8;
+/** Files up to this size go up in one signed PUT — fewer round-trips is faster. */
+const SINGLE_LIMIT = 8 * 1024 * 1024;
 const MAX_ATTEMPTS = 60;
 
 async function rawSigner<T>(path: string, body: unknown): Promise<T> {
