@@ -73,7 +73,12 @@ function MediaInput({
       </div>
 
       {mode === "url" ? (
-        <input className={softField} placeholder="https://…" value={value} onChange={(e) => onChange(e.target.value)} />
+        <input
+          className={`${softField} block w-full min-w-0 max-w-full text-ellipsis`}
+          placeholder="https://…"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+        />
       ) : (
         <input
           type="file"
