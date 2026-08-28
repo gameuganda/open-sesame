@@ -136,6 +136,9 @@ function HomePage() {
                   key={slide.backdrop}
                   src={slide.backdrop}
                   alt={slide.title}
+                  loading="eager"
+                  fetchPriority="high"
+                  decoding="async"
                   className="size-full animate-in fade-in object-cover object-[center_18%] duration-700 lg:object-[center_12%]"
                 />
               ) : (
