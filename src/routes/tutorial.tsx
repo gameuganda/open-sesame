@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Search, Play, Download, Megaphone, ArrowRight } from "lucide-react";
 import { Sidebar } from "@/components/youku/Sidebar";
 import { TopBar } from "@/components/youku/TopBar";
 import { MobileNav } from "@/components/youku/MobileNav";
+import { DownloadTour } from "@/components/luo/DownloadTour";
 
 const CHANNEL_URL = "https://whatsapp.com/channel/0029VbCdTbF6buMEQY5wzG3y";
 
@@ -68,6 +70,7 @@ export const Route = createFileRoute("/tutorial")({
 });
 
 function TutorialPage() {
+  const [tour, setTour] = useState(false);
   return (
     <div className="min-h-screen bg-background">
       <Sidebar />
@@ -83,6 +86,14 @@ function TutorialPage() {
             A 30-second tour of LUOFILM.SITE — follow these four steps and you will never miss a
             translation again.
           </p>
+
+          <button
+            type="button"
+            onClick={() => setTour(true)}
+            className="mt-4 inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-bold text-brand-foreground transition hover:brightness-110"
+          >
+            Show me step by step <ArrowRight className="size-4" />
+          </button>
 
           <ol className="mt-6 space-y-3">
             {STEPS.map((s) => (
@@ -126,6 +137,7 @@ function TutorialPage() {
         </main>
       </div>
       <MobileNav />
+      <DownloadTour open={tour} onClose={() => setTour(false)} />
     </div>
   );
 }
