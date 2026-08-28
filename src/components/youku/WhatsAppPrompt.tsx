@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Phone, X, Users, Megaphone } from "lucide-react";
 import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon";
+import collageBg from "@/assets/wa-collage.jpg";
 
 const CHANNEL_URL = "https://whatsapp.com/channel/0029VbCdTbF6buMEQY5wzG3y";
 const SUPPORT_URL = "https://wa.me/256795592662";
@@ -136,5 +137,6 @@ export function WhatsAppPrompt() {
         </div>
       </div>
     </aside>
+    </div>
   );
 }
