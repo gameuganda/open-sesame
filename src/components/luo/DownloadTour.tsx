@@ -93,7 +93,9 @@ export function DownloadTour({
 
   return (
     <div className="fixed inset-0 z-[80]">
-      <div className="absolute inset-0 bg-background/85 backdrop-blur-sm" />
+      {/* When a real element is spotlit, its shadow does the dimming so the
+          highlighted tab/poster stays bright and obvious. */}
+      {!box && <div className="absolute inset-0 bg-background/85 backdrop-blur-sm" />}
 
       {box && (
         <div
