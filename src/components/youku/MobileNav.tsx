@@ -22,54 +22,62 @@ export function MobileNav() {
   const iconClass = (active: boolean) =>
     `size-6 transition-transform duration-300 ${active ? "-translate-y-0.5 scale-110" : "scale-95 opacity-80"}`;
 
-  const items = [
-    { to: "/" as const, label: "Home", icon: "home", active: pathname === "/" },
-    {
-      to: "/luo" as const,
-      params: undefined,
-      label: "Luo",
-      icon: "live-tv",
-      active: pathname.startsWith("/luo"),
-    },
-    {
-      to: "/luganda" as const,
-      params: undefined,
-      label: "Luganda",
-      icon: "drama",
-      active: pathname.startsWith("/luganda"),
-    },
-    {
-      to: "/category/$slug" as const,
-      params: { slug: "trending" },
-      label: "Trending",
-      icon: "trending",
-      active: pathname === "/category/trending",
-    },
-  ];
+  const queryClient = useQueryClient();
+  // Warm the library data as soon as the tab is touched/hovered so the page
+  // paints with content instead of skeletons.
+  const warm = (language: LuoLanguage) => () => {
+    void queryClient.prefetchQuery({
+      queryKey: ["luo-titles", language],
+      queryFn: () => listLuoTitles(language),
+      staleTime: 30 * 1000,
+    });
+    void queryClient.prefetchQuery({
+      queryKey: ["luo-all-episodes"],
+      queryFn: listAllEpisodes,
+      staleTime: 60 * 1000,
+    });
+  };
 
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center px-3 pb-[calc(env(safe-area-inset-bottom)+10px)] lg:hidden">
       <nav className="pointer-events-auto flex w-full max-w-md items-center gap-1 rounded-[26px] border border-foreground/10 bg-background/70 p-1.5 shadow-[0_10px_34px_-8px_rgba(0,0,0,0.65)] backdrop-blur-2xl">
-        {items.map((item) =>
-          item.params ? (
-            <Link
-              key={item.label}
-              to={item.to}
-              params={item.params}
-              className={`${shell} ${tone(item.active)}`}
-            >
-              <Glow active={item.active} />
-              <Icon3D name={item.icon} className={`relative ${iconClass(item.active)}`} />
-              <span className="relative">{item.label}</span>
-            </Link>
-          ) : (
-            <Link key={item.label} to="/" className={`${shell} ${tone(item.active)}`}>
-              <Glow active={item.active} />
-              <Icon3D name={item.icon} className={`relative ${iconClass(item.active)}`} />
-              <span className="relative">{item.label}</span>
-            </Link>
-          ),
-        )}
+        <Link to="/" className={`${shell} ${tone(pathname === "/")}`}>
+          <Glow active={pathname === "/"} />
+          <Icon3D name="home" className={`relative ${iconClass(pathname === "/")}`} />
+          <span className="relative">Home</span>
+        </Link>
+        <Link
+          to="/luo"
+          onTouchStart={warm("luo")}
+          onMouseEnter={warm("luo")}
+          className={`${shell} ${tone(pathname.startsWith("/luo"))}`}
+        >
+          <Glow active={pathname.startsWith("/luo")} />
+          <Icon3D name="live-tv" className={`relative ${iconClass(pathname.startsWith("/luo"))}`} />
+          <span className="relative">Luo</span>
+        </Link>
+        <Link
+          to="/luganda"
+          onTouchStart={warm("luganda")}
+          onMouseEnter={warm("luganda")}
+          className={`${shell} ${tone(pathname.startsWith("/luganda"))}`}
+        >
+          <Glow active={pathname.startsWith("/luganda")} />
+          <Icon3D name="drama" className={`relative ${iconClass(pathname.startsWith("/luganda"))}`} />
+          <span className="relative">Luganda</span>
+        </Link>
+        <Link
+          to="/category/$slug"
+          params={{ slug: "trending" }}
+          className={`${shell} ${tone(pathname === "/category/trending")}`}
+        >
+          <Glow active={pathname === "/category/trending"} />
+          <Icon3D
+            name="trending"
+            className={`relative ${iconClass(pathname === "/category/trending")}`}
+          />
+          <span className="relative">Trending</span>
+        </Link>
         <Link to="/search" search={{ q: "" }} className={`${shell} ${tone(pathname === "/search")}`}>
           <Glow active={pathname === "/search"} />
           <Icon3D name="search" className={`relative ${iconClass(pathname === "/search")}`} />
