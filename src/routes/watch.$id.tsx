@@ -213,7 +213,7 @@ function WatchPage() {
     <div className="min-h-screen bg-background">
       <Sidebar />
       <div className="lg:pl-[var(--sidebar-w)]">
-        <div className="relative h-[104px] lg:h-14">
+        <div className="relative h-[56px] lg:h-14">
           <TopBar />
         </div>
 
