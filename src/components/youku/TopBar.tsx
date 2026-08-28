@@ -100,35 +100,22 @@ export function TopBar() {
   );
 
   return (
-    <header className="pointer-events-none fixed inset-x-0 top-0 z-50 flex flex-col gap-1.5 px-3 pb-2 pt-2 lg:h-14 lg:flex-row lg:items-center lg:gap-4 lg:py-0 lg:pl-[calc(var(--sidebar-w)+20px)]">
-      {/* Row 1: brand + search. */}
-      <div className="pointer-events-auto flex h-10 items-center gap-3 lg:h-auto lg:flex-1">
-        {/* Brand lives inside the float nav on mobile; the sidebar shows it on desktop. */}
-        <div className="ml-auto flex shrink-0 items-center gap-2 lg:ml-0 lg:hidden">
-          <button
-            type="button"
-            aria-label="Search"
-            onClick={() => setSearchOpen((v) => !v)}
-            className="grid size-9 shrink-0 place-items-center rounded-full bg-foreground/12 backdrop-blur-md"
-          >
-            <Icon3D name="search" className="size-5" />
-          </button>
-        </div>
-
-        <div className="hidden flex-1 justify-center lg:flex">
-          <FloatNav />
-        </div>
-
-        <div className="hidden min-w-0 shrink-0 lg:block lg:w-[320px]">{searchForm()}</div>
+    <header className="pointer-events-none fixed inset-x-0 top-0 z-50 flex flex-col gap-1.5 px-3 pb-1 pt-1.5 lg:h-14 lg:flex-row lg:items-center lg:gap-4 lg:py-0 lg:pl-[calc(var(--sidebar-w)+20px)]">
+      {/* Mobile: one row — brand + nav + search all inside the float. */}
+      <div className="pointer-events-auto -mx-3 flex justify-center overflow-x-auto px-3 [scrollbar-width:none] lg:hidden [&::-webkit-scrollbar]:hidden">
+        <FloatNav onSearch={() => setSearchOpen((v) => !v)} />
       </div>
 
-      {/* Row 2 on mobile: floating pill nav. */}
-      <div className="pointer-events-auto -mx-3 flex justify-center overflow-x-auto px-3 pb-0.5 [scrollbar-width:none] lg:hidden [&::-webkit-scrollbar]:hidden">
-        <FloatNav />
+      {/* Desktop: float nav centred, search on the right. */}
+      <div className="hidden items-center gap-3 lg:flex lg:h-auto lg:flex-1">
+        <div className="flex flex-1 justify-center">
+          <FloatNav />
+        </div>
+        <div className="min-w-0 shrink-0 lg:w-[320px]">{searchForm()}</div>
       </div>
 
       {searchOpen && (
-        <div className="pointer-events-auto absolute inset-x-3 top-[104px] lg:hidden">
+        <div className="pointer-events-auto absolute inset-x-3 top-[52px] lg:hidden">
           {searchForm(true)}
         </div>
       )}

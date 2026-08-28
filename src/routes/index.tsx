@@ -31,17 +31,26 @@ const homeQuery = queryOptions({
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "LUOFILM — Stream Movies and Series in HD" },
+      {
+        title:
+          "LUOFILM.SITE — Watch and Download Free Movies, Series, Animations, Episodes with Multiple Subtitles, Luo Translated Movies and Lugandan Translated Movies",
+      },
       {
         name: "description",
         content:
-          "Browse thousands of movies and TV series and watch them instantly in the built-in LUOFILM player — subtitles, episodes and quality switching included.",
+          "LUOFILM.SITE — watch and download free movies, series, animations and episodes with multiple subtitles, plus Luo translated movies and Lugandan translated movies in HD.",
       },
-      { property: "og:title", content: "LUOFILM — Stream Movies and Series in HD" },
+      {
+        property: "og:title",
+        content:
+          "LUOFILM.SITE — Watch and Download Free Movies, Series, Animations, Episodes with Multiple Subtitles, Luo & Lugandan Translated Movies",
+      },
       {
         property: "og:description",
-        content: "Browse and stream movies and series instantly in the built-in LUOFILM player.",
+        content:
+          "Free movies, series, animations and episodes with multiple subtitles, plus Luo and Lugandan translated movies — watch or download in HD.",
       },
+      { property: "og:url", content: "/" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -125,12 +134,12 @@ function HomePage() {
         <div className="relative">
           <TopBar />
 
-          {!data && <div className="relative h-[380px] w-full animate-pulse bg-muted/40 sm:h-[480px] lg:h-[540px]" />}
+          {!data && <div className="relative h-[210px] w-full animate-pulse bg-muted/40 sm:h-[360px] lg:h-[540px]" />}
 
           {!!data && !slide && <div className="h-16" />}
 
           {slide && (
-            <section className="relative h-[380px] w-full overflow-hidden sm:h-[480px] lg:h-[540px]">
+            <section className="relative h-[210px] w-full overflow-hidden sm:h-[360px] lg:h-[540px]">
               {slide.backdrop ? (
                 <img
                   key={slide.backdrop}
@@ -146,9 +155,9 @@ function HomePage() {
               )}
 
               {/* Bottom fade so the carousel melts behind the Trending rail instead of cutting off. */}
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-48 bg-gradient-to-t from-background via-background/75 to-transparent sm:h-56 lg:h-64" />
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-24 bg-gradient-to-t from-background via-background/75 to-transparent sm:h-40 lg:h-64" />
 
-              <div className="absolute bottom-0 left-0 top-28 z-20 flex max-w-xl flex-col justify-end gap-2 px-3 pb-40 sm:top-28 sm:pb-44 lg:top-16 lg:justify-end lg:gap-3 lg:px-8 lg:pb-28">
+              <div className="absolute bottom-0 left-0 top-10 z-20 flex max-w-xl flex-col justify-end gap-1.5 px-3 pb-16 sm:top-28 sm:pb-28 lg:top-16 lg:justify-end lg:gap-3 lg:px-8 lg:pb-28">
                 <h1 className="text-base font-black tracking-wide text-foreground drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] sm:text-lg lg:text-2xl">
                   {slide.title}
                 </h1>
@@ -168,7 +177,7 @@ function HomePage() {
               </div>
 
               {slides.length > 1 && (
-                <div className="absolute bottom-28 right-5 z-20 flex gap-2 lg:bottom-32 lg:right-8">
+                <div className="absolute bottom-3 right-4 z-20 flex gap-2 sm:bottom-20 lg:bottom-32 lg:right-8">
                   {slides.map((s, i) => (
                     <button
                       key={s.id}

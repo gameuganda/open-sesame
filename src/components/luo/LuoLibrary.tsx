@@ -101,13 +101,14 @@ export function LuoLibrary({ language }: { language: LuoLanguage }) {
           <section key={section.label}>
             <h2 className="mb-3 text-[15px] font-bold text-foreground">{section.label}</h2>
             <div className="grid grid-cols-3 gap-x-2 gap-y-4 sm:grid-cols-4 sm:gap-x-3 sm:gap-y-5 md:grid-cols-5 xl:grid-cols-6">
-              {section.rows.map((item) => {
+              {section.rows.map((item, idx) => {
                 const eps = freshTags.get(item.id);
                 return (
                   <Link
                     key={item.id}
                     to={language === "luo" ? "/luo/$id" : "/luganda/$id"}
                     params={{ id: item.id }}
+                    {...(idx === 0 ? { "data-tour": "first-poster" } : {})}
                     className="group block"
                   >
                     <div className="relative aspect-[2/3] overflow-hidden rounded-md bg-muted ring-1 ring-border transition-transform group-hover:-translate-y-1 group-hover:ring-brand">

@@ -1,15 +1,31 @@
 import { useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
 import { Crown, LogIn, LogOut, Shield, User as UserIcon } from "lucide-react";
 import { AuthModal } from "@/components/auth/AuthModal";
+import { Icon3D } from "@/components/Icon3D";
 import { useIsAdmin } from "@/hooks/useAuth";
 import { useSubscription } from "@/hooks/useSubscription";
 import { db as supabase } from "@/lib/db";
+import { listAllEpisodes, listLuoTitles, type LuoLanguage } from "@/lib/luo";
 import markAsset from "@/assets/luofilm-mark.png";
 
 /** Floating glass pill nav: LUO · LUGANDA · SUBSCRIBE · LOGIN */
-export function FloatNav() {
+export function FloatNav({ onSearch }: { onSearch?: () => void } = {}) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const queryClient = useQueryClient();
+  const warm = (language: LuoLanguage) => () => {
+    void queryClient.prefetchQuery({
+      queryKey: ["luo-titles", language],
+      queryFn: () => listLuoTitles(language),
+      staleTime: 30 * 1000,
+    });
+    void queryClient.prefetchQuery({
+      queryKey: ["luo-all-episodes"],
+      queryFn: listAllEpisodes,
+      staleTime: 60 * 1000,
+    });
+  };
   const { isAdmin, user } = useIsAdmin();
   const { openSubscribe } = useSubscription();
   const [authOpen, setAuthOpen] = useState(false);
@@ -27,9 +43,9 @@ export function FloatNav() {
       <div className="search-glow shrink-0 rounded-full p-[1.5px]">
       <div className="flex shrink-0 items-center gap-1 rounded-full bg-background/85 p-1 shadow-lg backdrop-blur-xl">
         {/* Brand inside the float on mobile only (desktop sidebar shows it). */}
-        <Link to="/" className="flex shrink-0 items-center gap-1.5 pl-1.5 pr-2 lg:hidden">
-          <img src={markAsset} alt="LUOFILM logo" className="h-6 w-auto" />
-          <span className="whitespace-nowrap font-[Bebas_Neue,system-ui,sans-serif] text-[15px] leading-none tracking-wide">
+        <Link to="/" className="flex shrink-0 items-center gap-1.5 pl-1.5 pr-1 lg:hidden">
+          <img src={markAsset} alt="LUOFILM logo" className="h-5 w-auto sm:h-6" />
+          <span className="whitespace-nowrap font-[Bebas_Neue,system-ui,sans-serif] text-[13px] leading-none tracking-wide sm:text-[15px]">
             <span className="bg-gradient-to-r from-[#00EAFF] to-[#5CFF00] bg-clip-text text-transparent">
               LUOFILM
             </span>
@@ -42,12 +58,32 @@ export function FloatNav() {
         >
           Moviebox
         </Link>
-        <Link to="/luo" className={`${pill(pathname.startsWith("/luo"))} hidden lg:grid`}>
+        <Link
+          to="/luo"
+          onMouseEnter={warm("luo")}
+          onTouchStart={warm("luo")}
+          className={`${pill(pathname.startsWith("/luo"))} hidden lg:grid`}
+        >
           Luo
         </Link>
-        <Link to="/luganda" className={`${pill(pathname.startsWith("/luganda"))} hidden lg:grid`}>
+        <Link
+          to="/luganda"
+          onMouseEnter={warm("luganda")}
+          onTouchStart={warm("luganda")}
+          className={`${pill(pathname.startsWith("/luganda"))} hidden lg:grid`}
+        >
           Luganda
         </Link>
+        {onSearch && (
+          <button
+            type="button"
+            aria-label="Search"
+            onClick={onSearch}
+            className="grid size-8 shrink-0 place-items-center rounded-full bg-foreground/12 text-foreground transition hover:bg-foreground/25 lg:hidden"
+          >
+            <Icon3D name="search" className="size-4" />
+          </button>
+        )}
         <button
           type="button"
           onClick={openSubscribe}
@@ -55,7 +91,7 @@ export function FloatNav() {
         >
           <span className="flex items-center gap-1">
             <Crown className="size-3.5" />
-            Subscribe
+            <span className="hidden sm:inline">Subscribe</span>
           </span>
         </button>
 
@@ -105,7 +141,7 @@ export function FloatNav() {
           >
             <span className="flex items-center gap-1">
               <LogIn className="size-3.5" />
-              Login
+              <span className="hidden sm:inline">Login</span>
             </span>
           </button>
         )}
