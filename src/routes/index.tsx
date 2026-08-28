@@ -85,9 +85,13 @@ function HomePage() {
       queryOptions({
         queryKey: ["home-section", section.title],
         queryFn: () => fetchSection(section),
-        staleTime: 2 * 60 * 1000,
-        refetchInterval: 10 * 60 * 1000,
+        // Every rail refreshes itself from the live catalog instead of serving
+        // whatever was cached the first time the page opened.
+        staleTime: 30 * 1000,
+        refetchInterval: 3 * 60 * 1000,
+        refetchIntervalInBackground: true,
         refetchOnWindowFocus: true,
+        refetchOnMount: "always",
       }),
     ),
   });
