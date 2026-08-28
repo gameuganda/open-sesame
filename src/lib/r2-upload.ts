@@ -45,17 +45,49 @@ function put(url: string, body: Blob, onLoaded?: (loaded: number) => void) {
   });
 }
 
+/**
+ * Blocks until the browser is back online again. Data toggled off then on, a
+ * flaky tunnel or a dropped Wi-Fi hop simply pauses the upload instead of
+ * failing it — we keep waiting (up to 30 min) and resume the same part.
+ */
 async function waitForNetwork() {
   if (typeof navigator === "undefined" || navigator.onLine) return;
   await new Promise<void>((resolve) => {
-    const done = () => {
-      window.removeEventListener("online", done);
+    const deadline = Date.now() + 30 * 60 * 1000;
+    const finish = () => {
+      window.removeEventListener("online", finish);
+      clearInterval(poll);
       resolve();
     };
-    window.addEventListener("online", done);
-    setTimeout(done, 15000);
+    const poll = setInterval(() => {
+      if (navigator.onLine || Date.now() > deadline) finish();
+    }, 1000);
+    window.addEventListener("online", finish);
   });
 }
+
+/** A permanent, non-retryable failure (bad token, rejected request). */
+const fatal = (err: unknown) =>
+  /unauthor|forbidden|invalid|not configured|must be signed in/i.test(
+    err instanceof Error ? err.message : "",
+  );
+
+/** Retries an upload step across network drops with capped backoff. */
+async function withRetry<T>(run: () => Promise<T>, onReset?: () => void): Promise<T> {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      return await run();
+    } catch (err) {
+      onReset?.();
+      if (fatal(err) || attempt >= MAX_ATTEMPTS) throw err;
+      await waitForNetwork();
+      await new Promise((r) => setTimeout(r, Math.min(10000, 1000 * attempt)));
+    }
+  }
+}
+
+const signer = <T,>(path: string, body: unknown) => withRetry(() => rawSigner<T>(path, body));
+
 
 export async function uploadToR2(
   folder: string,
