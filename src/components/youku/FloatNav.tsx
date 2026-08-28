@@ -5,6 +5,7 @@ import { AuthModal } from "@/components/auth/AuthModal";
 import { useIsAdmin } from "@/hooks/useAuth";
 import { useSubscription } from "@/hooks/useSubscription";
 import { db as supabase } from "@/lib/db";
+import markAsset from "@/assets/luofilm-mark.png";
 
 /** Floating glass pill nav: LUO · LUGANDA · SUBSCRIBE · LOGIN */
 export function FloatNav() {
