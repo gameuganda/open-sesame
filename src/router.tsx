@@ -21,7 +21,11 @@ export const getRouter = () => {
     routeTree,
     context: { queryClient },
     scrollRestoration: true,
-    defaultPreloadStaleTime: 0,
+    // Start loading a page the moment a link is hovered/touched so Luo and
+    // Luganda open instantly instead of waiting for the click.
+    defaultPreload: "intent",
+    defaultPreloadDelay: 0,
+    defaultPreloadStaleTime: 30 * 1000,
   });
 
   return router;
