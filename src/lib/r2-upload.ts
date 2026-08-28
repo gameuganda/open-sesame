@@ -128,7 +128,7 @@ export async function uploadToR2(
       const blob = file.slice(index * PART_SIZE, Math.min((index + 1) * PART_SIZE, file.size));
 
       // Each part re-signs and re-sends itself until it lands, so a dropped
-      // connection only rewinds that one 16 MB chunk — never the whole upload.
+      // connection only rewinds that one 8 MB chunk — never the whole upload.
       await withRetry(
         async () => {
           const { urls } = await signer<{ urls: { partNumber: number; url: string }[] }>("/uploads/sign", {
