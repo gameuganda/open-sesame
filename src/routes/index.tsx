@@ -17,9 +17,11 @@ const homeQuery = queryOptions({
   queryFn: () => getHome(),
   // Keep the front page live: the catalog's trending / coming-soon rails move
   // every few minutes, so refresh in the background rather than caching for long.
-  staleTime: 60 * 1000,
-  refetchInterval: 5 * 60 * 1000,
+  staleTime: 30 * 1000,
+  refetchInterval: 2 * 60 * 1000,
+  refetchIntervalInBackground: true,
   refetchOnWindowFocus: true,
+  refetchOnMount: "always",
 });
 
 
@@ -83,9 +85,13 @@ function HomePage() {
       queryOptions({
         queryKey: ["home-section", section.title],
         queryFn: () => fetchSection(section),
-        staleTime: 2 * 60 * 1000,
-        refetchInterval: 10 * 60 * 1000,
+        // Every rail refreshes itself from the live catalog instead of serving
+        // whatever was cached the first time the page opened.
+        staleTime: 30 * 1000,
+        refetchInterval: 3 * 60 * 1000,
+        refetchIntervalInBackground: true,
         refetchOnWindowFocus: true,
+        refetchOnMount: "always",
       }),
     ),
   });
@@ -130,7 +136,7 @@ function HomePage() {
                   key={slide.backdrop}
                   src={slide.backdrop}
                   alt={slide.title}
-                  className="size-full animate-in fade-in object-cover duration-700"
+                  className="size-full animate-in fade-in object-cover object-[center_18%] duration-700 lg:object-[center_12%]"
                 />
               ) : (
                 <div className="size-full bg-card" />

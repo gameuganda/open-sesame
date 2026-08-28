@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { MessageCircle, Phone, X, Users, Megaphone } from "lucide-react";
+import { Phone, X, Users, Megaphone } from "lucide-react";
+import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon";
 
 const CHANNEL_URL = "https://whatsapp.com/channel/0029VbCdTbF6buMEQY5wzG3y";
 const SUPPORT_URL = "https://wa.me/256795592662";
@@ -64,8 +65,8 @@ export function WhatsAppPrompt() {
         </button>
 
         <div className="relative flex flex-col items-center text-center">
-          <span className="grid size-14 place-items-center rounded-full bg-gradient-to-br from-[#25D366] to-[#128C7E] shadow-[0_10px_25px_-8px_rgba(37,211,102,0.8)] ring-4 ring-white/10">
-            <MessageCircle className="size-7 text-white" fill="currentColor" />
+          <span className="grid size-14 place-items-center rounded-full bg-white/10 shadow-[0_10px_25px_-8px_rgba(37,211,102,0.8)] ring-4 ring-white/10">
+            <WhatsAppIcon className="size-11" />
           </span>
 
           <h2 className="mt-3 text-xl font-extrabold tracking-tight text-white">

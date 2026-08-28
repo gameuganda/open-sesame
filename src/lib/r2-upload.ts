@@ -5,9 +5,9 @@ export type UploadProgress = { loaded: number; total: number; percent: number };
 const PART_SIZE = 16 * 1024 * 1024;
 const CONCURRENCY = 6;
 const SINGLE_LIMIT = 16 * 1024 * 1024;
-const MAX_ATTEMPTS = 8;
+const MAX_ATTEMPTS = 60;
 
-async function signer<T>(path: string, body: unknown): Promise<T> {
+async function rawSigner<T>(path: string, body: unknown): Promise<T> {
   const res = await fetch(`${uploadBackend()}${path}`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${uploadToken()}` },
@@ -45,17 +45,49 @@ function put(url: string, body: Blob, onLoaded?: (loaded: number) => void) {
   });
 }
 
+/**
+ * Blocks until the browser is back online again. Data toggled off then on, a
+ * flaky tunnel or a dropped Wi-Fi hop simply pauses the upload instead of
+ * failing it — we keep waiting (up to 30 min) and resume the same part.
+ */
 async function waitForNetwork() {
   if (typeof navigator === "undefined" || navigator.onLine) return;
   await new Promise<void>((resolve) => {
-    const done = () => {
-      window.removeEventListener("online", done);
+    const deadline = Date.now() + 30 * 60 * 1000;
+    const finish = () => {
+      window.removeEventListener("online", finish);
+      clearInterval(poll);
       resolve();
     };
-    window.addEventListener("online", done);
-    setTimeout(done, 15000);
+    const poll = setInterval(() => {
+      if (navigator.onLine || Date.now() > deadline) finish();
+    }, 1000);
+    window.addEventListener("online", finish);
   });
 }
+
+/** A permanent, non-retryable failure (bad token, rejected request). */
+const fatal = (err: unknown) =>
+  /unauthor|forbidden|invalid|not configured|must be signed in/i.test(
+    err instanceof Error ? err.message : "",
+  );
+
+/** Retries an upload step across network drops with capped backoff. */
+async function withRetry<T>(run: () => Promise<T>, onReset?: () => void): Promise<T> {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      return await run();
+    } catch (err) {
+      onReset?.();
+      if (fatal(err) || attempt >= MAX_ATTEMPTS) throw err;
+      await waitForNetwork();
+      await new Promise((r) => setTimeout(r, Math.min(10000, 1000 * attempt)));
+    }
+  }
+}
+
+const signer = <T,>(path: string, body: unknown) => withRetry(() => rawSigner<T>(path, body));
+
 
 export async function uploadToR2(
   folder: string,
@@ -71,7 +103,7 @@ export async function uploadToR2(
       filename: file.name,
       contentType: file.type || "application/octet-stream",
     });
-    await put(url, file, emit);
+    await withRetry(() => put(url, file, emit), () => emit(0));
     emit(file.size);
     return publicUrl;
   }
@@ -94,8 +126,10 @@ export async function uploadToR2(
       const partNumber = index + 1;
       const blob = file.slice(index * PART_SIZE, Math.min((index + 1) * PART_SIZE, file.size));
 
-      for (let attempt = 1; ; attempt++) {
-        try {
+      // Each part re-signs and re-sends itself until it lands, so a dropped
+      // connection only rewinds that one 16 MB chunk — never the whole upload.
+      await withRetry(
+        async () => {
           const { urls } = await signer<{ urls: { partNumber: number; url: string }[] }>("/uploads/sign", {
             key,
             uploadId,
@@ -111,15 +145,12 @@ export async function uploadToR2(
           etags[index] = etag;
           loadedPerPart[index] = blob.size;
           report();
-          return;
-        } catch (err) {
+        },
+        () => {
           loadedPerPart[index] = 0;
           report();
-          if (attempt >= MAX_ATTEMPTS) throw err;
-          await waitForNetwork();
-          await new Promise((r) => setTimeout(r, Math.min(10000, 1000 * attempt)));
-        }
-      }
+        },
+      );
     }
   };
 
