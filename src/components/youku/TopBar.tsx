@@ -118,12 +118,7 @@ export function TopBar() {
     <header className="pointer-events-none fixed inset-x-0 top-0 z-50 flex flex-col gap-1.5 px-3 pb-2 pt-2 lg:h-14 lg:flex-row lg:items-center lg:gap-4 lg:py-0 lg:pl-[calc(var(--sidebar-w)+20px)]">
       {/* Row 1: brand + search. */}
       <div className="pointer-events-auto flex h-10 items-center gap-3 lg:h-auto lg:flex-1">
-        {/* The sidebar already shows the brand on desktop, so only render it on mobile. */}
-        <div className="lg:hidden">
-          <BrandMark />
-        </div>
-
-
+        {/* Brand lives inside the float nav on mobile; the sidebar shows it on desktop. */}
         <div className="ml-auto flex shrink-0 items-center gap-2 lg:ml-0 lg:hidden">
           <button
             type="button"
