@@ -17,9 +17,11 @@ const homeQuery = queryOptions({
   queryFn: () => getHome(),
   // Keep the front page live: the catalog's trending / coming-soon rails move
   // every few minutes, so refresh in the background rather than caching for long.
-  staleTime: 60 * 1000,
-  refetchInterval: 5 * 60 * 1000,
+  staleTime: 30 * 1000,
+  refetchInterval: 2 * 60 * 1000,
+  refetchIntervalInBackground: true,
   refetchOnWindowFocus: true,
+  refetchOnMount: "always",
 });
 
 
