@@ -1,15 +1,31 @@
 import { useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
 import { Crown, LogIn, LogOut, Shield, User as UserIcon } from "lucide-react";
 import { AuthModal } from "@/components/auth/AuthModal";
+import { Icon3D } from "@/components/Icon3D";
 import { useIsAdmin } from "@/hooks/useAuth";
 import { useSubscription } from "@/hooks/useSubscription";
 import { db as supabase } from "@/lib/db";
+import { listAllEpisodes, listLuoTitles, type LuoLanguage } from "@/lib/luo";
 import markAsset from "@/assets/luofilm-mark.png";
 
 /** Floating glass pill nav: LUO · LUGANDA · SUBSCRIBE · LOGIN */
-export function FloatNav() {
+export function FloatNav({ onSearch }: { onSearch?: () => void } = {}) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const queryClient = useQueryClient();
+  const warm = (language: LuoLanguage) => () => {
+    void queryClient.prefetchQuery({
+      queryKey: ["luo-titles", language],
+      queryFn: () => listLuoTitles(language),
+      staleTime: 30 * 1000,
+    });
+    void queryClient.prefetchQuery({
+      queryKey: ["luo-all-episodes"],
+      queryFn: listAllEpisodes,
+      staleTime: 60 * 1000,
+    });
+  };
   const { isAdmin, user } = useIsAdmin();
   const { openSubscribe } = useSubscription();
   const [authOpen, setAuthOpen] = useState(false);
