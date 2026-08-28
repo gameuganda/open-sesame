@@ -87,6 +87,7 @@ function MediaInput({
           onChange={async (e) => {
             const f = e.target.files?.[0];
             if (!f) return;
+            setActive({ name: f.name, size: f.size });
             setPct(0);
             try {
               const { url } = await uploadMedia(f, setPct);
@@ -95,6 +96,7 @@ function MediaInput({
               toast.success(`${f.name} uploaded`);
             } catch (err) {
               setPct(null);
+              setActive(null);
               toast.error(err instanceof Error ? err.message : "Upload failed");
             }
           }}
@@ -102,14 +104,36 @@ function MediaInput({
       )}
 
       {pct !== null && (
-        <div className="mt-2">
-          <div className="h-2 w-full overflow-hidden rounded-full bg-black/8">
-            <div
-              className="h-full rounded-full bg-[linear-gradient(100deg,oklch(0.85_0.13_85),oklch(0.75_0.16_45))] transition-all"
-              style={{ width: `${pct}%` }}
-            />
+        <div className="mt-3 rounded-2xl bg-white/70 p-3 ring-1 ring-black/5">
+          <div className="mb-2 flex min-w-0 items-end justify-between gap-2">
+            <div className="min-w-0">
+              <p className="truncate text-[12px] font-bold">{active?.name ?? "Uploading"}</p>
+              <p className="text-[11px] opacity-60">
+                {active ? `${formatBytes(Math.round((active.size * pct) / 100))} of ${formatBytes(active.size)}` : ""}
+                {offline ? " · waiting for network…" : ""}
+              </p>
+            </div>
+            <span className="shrink-0 bg-[linear-gradient(100deg,oklch(0.8_0.15_85),oklch(0.65_0.2_35))] bg-clip-text text-[22px] font-black leading-none text-transparent">
+              {pct}%
+            </span>
           </div>
-          <p className="mt-1 text-[11px] opacity-60">{pct === 100 ? "Upload complete" : `Uploading… ${pct}%`}</p>
+          <div className="relative h-5 w-full overflow-hidden rounded-full bg-black/10 ring-1 ring-inset ring-black/5">
+            <div
+              className="relative h-full rounded-full bg-[linear-gradient(100deg,oklch(0.88_0.14_95),oklch(0.8_0.17_60)_45%,oklch(0.68_0.2_30))] shadow-[0_2px_12px_-2px_oklch(0.75_0.18_50)] transition-[width] duration-300 ease-out"
+              style={{ width: `${Math.max(pct, 3)}%` }}
+            >
+              {pct < 100 && (
+                <span className="absolute inset-0 animate-pulse rounded-full bg-[linear-gradient(100deg,transparent,rgba(255,255,255,0.65),transparent)]" />
+              )}
+            </div>
+          </div>
+          <p className="mt-2 text-[11px] font-semibold opacity-65">
+            {pct === 100
+              ? "Upload complete — link attached"
+              : offline
+                ? "Connection lost — the upload resumes by itself when data is back."
+                : "Uploading… you can keep this tab open, drops resume automatically."}
+          </p>
         </div>
       )}
       {value && <p className="mt-2 truncate text-[11px] opacity-55">{value}</p>}
