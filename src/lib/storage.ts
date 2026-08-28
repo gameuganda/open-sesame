@@ -76,7 +76,16 @@ export async function uploadFile(
   const release = await keepAwake();
   try {
     if (r2Enabled()) return await uploadToR2(`media/${folder}`, file, onProgress);
-    return await firebaseUpload(folder, file, onProgress);
+    // Firebase resumable uploads restart from the last committed byte, so retry
+    // a few times when the connection drops instead of failing the upload.
+    for (let attempt = 1; ; attempt++) {
+      try {
+        return await firebaseUpload(folder, file, onProgress);
+      } catch (err) {
+        if (attempt >= 6) throw err;
+        await new Promise((r) => setTimeout(r, Math.min(10000, 1500 * attempt)));
+      }
+    }
   } finally {
     release();
   }
