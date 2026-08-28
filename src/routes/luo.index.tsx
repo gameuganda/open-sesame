@@ -6,22 +6,39 @@ import { MobileNav } from "@/components/youku/MobileNav";
 import { LuoLibrary } from "@/components/luo/LuoLibrary";
 
 export const Route = createFileRoute("/luo/")({
-  head: () => ({
-    meta: [
-      { title: "Luo Movies & Series — LUOFILM.SITE" },
-      {
-        name: "description",
-        content: "Watch Luo translated movies and series uploaded by the LUOFILM admin team.",
-      },
-      { property: "og:title", content: "Luo Movies & Series — LUOFILM.SITE" },
-      {
-        property: "og:description",
-        content: "Watch Luo translated movies and series uploaded by the LUOFILM admin team.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () => {
+    const title =
+      "LUOFILM.SITE Watch and Download Luo Translated Movies by VJ Senior Paul (VJ Paul UG) — First Platform to Download and Watch Luo Translated Movies, Series, Animation, Comedy, Action, Romance, Horror, Thriller, Sci-Fi, Drama, Adventure, Crime, Fantasy";
+    const description =
+      "First platform to watch and download Luo translated movies by VJ Senior Paul (VJ Paul UG) — Luo translated movies, series, animation, comedy, action, romance, horror, thriller, sci-fi, drama, adventure, crime and fantasy, free in HD.";
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:type", content: "website" },
+        { property: "og:url", content: "/luo" },
+        { property: "og:site_name", content: "LUOFILM.SITE" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: title },
+        { name: "twitter:description", content: description },
+      ],
+      links: [{ rel: "canonical", href: "/luo" }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            name: title,
+            description,
+            inLanguage: "luo",
+          }),
+        },
+      ],
+    };
+  },
   component: LuoPage,
 });
 
