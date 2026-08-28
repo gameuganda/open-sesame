@@ -43,9 +43,9 @@ export function FloatNav({ onSearch }: { onSearch?: () => void } = {}) {
       <div className="search-glow shrink-0 rounded-full p-[1.5px]">
       <div className="flex shrink-0 items-center gap-1 rounded-full bg-background/85 p-1 shadow-lg backdrop-blur-xl">
         {/* Brand inside the float on mobile only (desktop sidebar shows it). */}
-        <Link to="/" className="flex shrink-0 items-center gap-1.5 pl-1.5 pr-2 lg:hidden">
-          <img src={markAsset} alt="LUOFILM logo" className="h-6 w-auto" />
-          <span className="whitespace-nowrap font-[Bebas_Neue,system-ui,sans-serif] text-[15px] leading-none tracking-wide">
+        <Link to="/" className="flex shrink-0 items-center gap-1.5 pl-1.5 pr-1 lg:hidden">
+          <img src={markAsset} alt="LUOFILM logo" className="h-5 w-auto sm:h-6" />
+          <span className="whitespace-nowrap font-[Bebas_Neue,system-ui,sans-serif] text-[13px] leading-none tracking-wide sm:text-[15px]">
             <span className="bg-gradient-to-r from-[#00EAFF] to-[#5CFF00] bg-clip-text text-transparent">
               LUOFILM
             </span>
@@ -91,7 +91,7 @@ export function FloatNav({ onSearch }: { onSearch?: () => void } = {}) {
         >
           <span className="flex items-center gap-1">
             <Crown className="size-3.5" />
-            Subscribe
+            <span className="hidden sm:inline">Subscribe</span>
           </span>
         </button>
 
@@ -141,7 +141,7 @@ export function FloatNav({ onSearch }: { onSearch?: () => void } = {}) {
           >
             <span className="flex items-center gap-1">
               <LogIn className="size-3.5" />
-              Login
+              <span className="hidden sm:inline">Login</span>
             </span>
           </button>
         )}
