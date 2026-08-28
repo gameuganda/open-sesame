@@ -21,11 +21,11 @@ type RestValue = Record<string, unknown>;
 
 function val(v: RestValue | undefined): unknown {
   if (!v) return null;
-  if ("stringValue" in v) return v.stringValue;
-  if ("integerValue" in v) return Number(v.integerValue);
-  if ("doubleValue" in v) return Number(v.doubleValue);
-  if ("booleanValue" in v) return v.booleanValue;
-  if ("timestampValue" in v) return v.timestampValue;
+  if ("stringValue" in v) return v['stringValue'];
+  if ("integerValue" in v) return Number(v['integerValue']);
+  if ("doubleValue" in v) return Number(v['doubleValue']);
+  if ("booleanValue" in v) return v['booleanValue'];
+  if ("timestampValue" in v) return v['timestampValue'];
   return null;
 }
 
