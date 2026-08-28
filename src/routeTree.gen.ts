@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as SearchRouteImport } from './routes/search'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as TutorialRouteImport } from './routes/tutorial'
 import { Route as CategorySlugRouteImport } from './routes/category.$slug'
 import { Route as LugandaIndexRouteImport } from './routes/luganda.index'
 import { Route as LugandaIdRouteImport } from './routes/luganda.$id'
@@ -35,6 +37,16 @@ const AdminRoute = AdminRouteImport.update({
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TutorialRoute = TutorialRouteImport.update({
+  id: '/tutorial',
+  path: '/tutorial',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CategorySlugRoute = CategorySlugRouteImport.update({
@@ -87,6 +99,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/search': typeof SearchRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/tutorial': typeof TutorialRoute
   '/category/$slug': typeof CategorySlugRoute
   '/luganda/$id': typeof LugandaIdRoute
   '/luo/$id': typeof LuoIdRoute
@@ -101,6 +115,8 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/search': typeof SearchRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/tutorial': typeof TutorialRoute
   '/category/$slug': typeof CategorySlugRoute
   '/luganda/$id': typeof LugandaIdRoute
   '/luo/$id': typeof LuoIdRoute
@@ -116,6 +132,8 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/search': typeof SearchRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/tutorial': typeof TutorialRoute
   '/category/$slug': typeof CategorySlugRoute
   '/luganda/$id': typeof LugandaIdRoute
   '/luo/$id': typeof LuoIdRoute
@@ -132,6 +150,8 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/search'
+    | '/sitemap.xml'
+    | '/tutorial'
     | '/category/$slug'
     | '/luganda/$id'
     | '/luo/$id'
@@ -146,6 +166,8 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/search'
+    | '/sitemap.xml'
+    | '/tutorial'
     | '/category/$slug'
     | '/luganda/$id'
     | '/luo/$id'
@@ -160,6 +182,8 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/search'
+    | '/sitemap.xml'
+    | '/tutorial'
     | '/category/$slug'
     | '/luganda/$id'
     | '/luo/$id'
@@ -175,6 +199,8 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
   SearchRoute: typeof SearchRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  TutorialRoute: typeof TutorialRoute
   CategorySlugRoute: typeof CategorySlugRoute
   LugandaIdRoute: typeof LugandaIdRoute
   LuoIdRoute: typeof LuoIdRoute
@@ -207,6 +233,20 @@ declare module '@tanstack/react-router' {
       path: '/search'
       fullPath: '/search'
       preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tutorial': {
+      id: '/tutorial'
+      path: '/tutorial'
+      fullPath: '/tutorial'
+      preLoaderRoute: typeof TutorialRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/category/$slug': {
@@ -279,6 +319,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   SearchRoute: SearchRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
+  TutorialRoute: TutorialRoute,
   CategorySlugRoute: CategorySlugRoute,
   LugandaIdRoute: LugandaIdRoute,
   LuoIdRoute: LuoIdRoute,

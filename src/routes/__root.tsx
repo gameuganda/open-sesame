@@ -97,6 +97,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&display=swap",
       },
       { rel: "icon", href: "/favicon.png", type: "image/png" },
+      // Warm the poster/artwork CDNs so images start downloading with the very
+      // first request instead of after a fresh TLS handshake per rail.
+      { rel: "preconnect", href: "https://valiw.hakunaymatata.com", crossOrigin: "anonymous" },
+      { rel: "dns-prefetch", href: "https://valiw.hakunaymatata.com" },
+      { rel: "preconnect", href: "https://api7.aoneroom.com", crossOrigin: "anonymous" },
+      { rel: "dns-prefetch", href: "https://api7.aoneroom.com" },
     ],
   }),
 

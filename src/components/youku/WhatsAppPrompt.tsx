@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Phone, X, Users, Megaphone } from "lucide-react";
 import { WhatsAppIcon } from "@/components/icons/WhatsAppIcon";
+import collageBg from "@/assets/wa-collage.jpg";
 
 const CHANNEL_URL = "https://whatsapp.com/channel/0029VbCdTbF6buMEQY5wzG3y";
 const SUPPORT_URL = "https://wa.me/256795592662";
@@ -43,14 +44,36 @@ export function WhatsAppPrompt() {
   if (!open) return null;
 
   return (
+    <div
+      className={`fixed inset-0 z-[65] grid place-items-center px-4 transition-opacity duration-300 ${
+        leaving ? "opacity-0" : "opacity-100"
+      }`}
+    >
+      {/* dim the page behind the floating card */}
+      <button
+        type="button"
+        aria-label="Dismiss WhatsApp prompt"
+        onClick={dismiss}
+        className="absolute inset-0 bg-background/70 backdrop-blur-sm"
+      />
     <aside
       role="dialog"
       aria-label="Follow LUOFILM on WhatsApp"
-      className={`wa-prompt fixed inset-x-3 bottom-5 z-[65] mx-auto max-w-md transition-all duration-400 ${
-        leaving ? "translate-y-6 opacity-0" : "animate-enter"
+      className={`wa-prompt relative w-full max-w-sm transition-all duration-400 ${
+        leaving ? "scale-95 opacity-0" : "animate-enter"
       }`}
     >
-      <div className="relative overflow-hidden rounded-3xl border border-[#25D366]/40 bg-gradient-to-br from-[#0b3d2e] via-[#0f5132] to-[#075E54] p-5 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)]">
+      <div className="relative overflow-hidden rounded-3xl border border-[#25D366]/40 p-5 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)]">
+        {/* movie-collage backdrop, softened so the content stays readable */}
+        <img
+          src={collageBg}
+          alt=""
+          width={1024}
+          height={1024}
+          loading="lazy"
+          className="pointer-events-none absolute inset-0 size-full object-cover"
+        />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0b3d2e]/90 via-[#0f5132]/85 to-[#075E54]/90" />
         {/* glow accents */}
         <div className="pointer-events-none absolute -top-16 -right-16 size-40 rounded-full bg-[#25D366]/30 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-16 -left-16 size-40 rounded-full bg-[#128C7E]/30 blur-3xl" />
@@ -114,5 +137,6 @@ export function WhatsAppPrompt() {
         </div>
       </div>
     </aside>
+    </div>
   );
 }
