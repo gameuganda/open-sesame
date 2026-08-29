@@ -60,6 +60,7 @@ export function FloatNav({ onSearch }: { onSearch?: () => void } = {}) {
         </Link>
         <Link
           to="/luo"
+          data-tour="luo-tab"
           onMouseEnter={warm("luo")}
           onTouchStart={warm("luo")}
           className={`${pill(pathname.startsWith("/luo"))} hidden lg:grid`}

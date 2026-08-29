@@ -3,8 +3,7 @@ import type {} from "@tanstack/react-start";
 import { CATEGORIES } from "@/lib/categories";
 import { restListTitles } from "@/lib/luo-rest";
 
-// TODO: replace with your project URL once a project name or custom domain is set.
-const BASE_URL = "";
+const BASE_URL = "https://luofilm.site";
 
 interface SitemapEntry {
   path: string;
