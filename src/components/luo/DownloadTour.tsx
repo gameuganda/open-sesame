@@ -183,7 +183,8 @@ export function DownloadTour({ open, onClose }: { open?: boolean; onClose?: () =
 
   return (
     <div className="pointer-events-none fixed inset-0 z-[80]">
-      {!hasTarget && <div className="absolute inset-0 bg-background/85 backdrop-blur-sm" />}
+      {/* No dimming when there is nothing to highlight — the page must stay
+          fully usable/clickable while the tour card is showing. */}
 
       {hasTarget && (
         <>
